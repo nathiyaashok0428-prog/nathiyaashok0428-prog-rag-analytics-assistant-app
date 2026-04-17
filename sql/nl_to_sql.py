@@ -685,19 +685,22 @@ def _preferred_template_sql(user_query):
     return None
 
 def _call_ollama(prompt):
-
-    response = requests.post(
-        OLLAMA_URL,
-        json={
-            "model": "mistral",
-            "prompt": prompt,
-            "stream": False
-        }
-    )
-
-    result = response.json()
-
-    return result["response"]
+    try:
+        response = requests.post(
+            OLLAMA_URL,
+            json={
+                "model": "mistral",
+                "prompt": prompt,
+                "stream": False
+            },
+            timeout=30,
+        )
+        response.raise_for_status()
+        result = response.json()
+        return result.get("response", "")
+    except Exception as exc:
+        print("Ollama SQL generation error:", exc)
+        return ""
 
 
 def _can_execute_sql(sql_query):
@@ -714,6 +717,8 @@ def _can_execute_sql(sql_query):
 
 
 def repair_sql(user_query, bad_sql, sql_error):
+    if not bad_sql:
+        return ""
 
     prompt = f"""
 You are fixing a SQLite query for this schema.
@@ -738,7 +743,11 @@ Instructions:
 Corrected SQL:
 """
 
-    repaired_sql = sanitize_sql_identifiers(clean_sql_response(_call_ollama(prompt)))
+    repaired_response = _call_ollama(prompt)
+    if not repaired_response:
+        return ""
+
+    repaired_sql = sanitize_sql_identifiers(clean_sql_response(repaired_response))
 
     return repaired_sql
 
@@ -768,7 +777,17 @@ User Question:
 SQL Query:
 """
 
-    sql = sanitize_sql_identifiers(clean_sql_response(_call_ollama(prompt)))
+    raw_sql = _call_ollama(prompt)
+    if not raw_sql:
+        fallback_sql = _template_sql_fallback(user_query)
+        if fallback_sql:
+            fallback_valid, _ = _can_execute_sql(fallback_sql)
+            if fallback_valid:
+                persist_sql_cache(user_query, fallback_sql)
+                return fallback_sql
+        return "SELECT 1 AS unavailable;"
+
+    sql = sanitize_sql_identifiers(clean_sql_response(raw_sql))
 
     is_valid, sql_error = _can_execute_sql(sql)
 
