@@ -528,6 +528,13 @@ def inject_styles() -> None:
             box-shadow: none !important;
         }
 
+        [data-testid="stBottomBlockContainer"],
+        [data-testid="stBottomBlockContainer"] > div {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
         [data-testid="stChatInput"] > div {
             max-width: 960px;
             margin: 0 auto;
