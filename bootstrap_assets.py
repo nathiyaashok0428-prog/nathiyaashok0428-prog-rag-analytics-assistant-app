@@ -15,6 +15,11 @@ ASSET_CONFIG: Dict[str, Tuple[Path, str]] = {
 
 
 def _read_streamlit_secret(name: str) -> str | None:
+    project_secret_file = Path.cwd() / ".streamlit" / "secrets.toml"
+    user_secret_file = Path.home() / ".streamlit" / "secrets.toml"
+    if not project_secret_file.exists() and not user_secret_file.exists():
+        return None
+
     try:
         import streamlit as st
 
