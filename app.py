@@ -546,21 +546,36 @@ def inject_styles() -> None:
             align-items: center;
         }
 
+        [data-testid="stChatInput"] div[data-baseweb="textarea"],
+        [data-testid="stChatInput"] div[data-baseweb="base-input"] {
+            border: 1px solid #e3e8f1 !important;
+            border-radius: 18px !important;
+            background: #ffffff !important;
+            box-shadow: 0 6px 20px rgba(23, 35, 79, 0.06) !important;
+        }
+
         [data-testid="stChatInput"] textarea {
             min-height: 50px !important;
             border-radius: 18px !important;
-            border: 1px solid #d8dee8 !important;
-            background: #ffffff !important;
+            border: none !important;
+            background: transparent !important;
             color: var(--text) !important;
-            box-shadow: 0 6px 20px rgba(23, 35, 79, 0.06) !important;
+            box-shadow: none !important;
             padding-left: 1rem !important;
             padding-right: 3.1rem !important;
         }
 
         [data-testid="stChatInput"] textarea:focus,
         [data-testid="stChatInput"] textarea:focus-visible {
-            border-color: #cbd4e1 !important;
-            box-shadow: 0 6px 20px rgba(23, 35, 79, 0.06) !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        [data-testid="stChatInput"] div[data-baseweb="textarea"]:focus-within,
+        [data-testid="stChatInput"] div[data-baseweb="base-input"]:focus-within {
+            border-color: #d6ddea !important;
+            box-shadow: 0 6px 20px rgba(23, 35, 79, 0.08) !important;
             outline: none !important;
         }
 
