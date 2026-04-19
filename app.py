@@ -87,6 +87,8 @@ def inject_styles() -> None:
             --accent: #1677ee;
             --accent-2: #0f5fc7;
             --shadow: 0 12px 34px rgba(23, 35, 79, 0.08);
+            --chat-max-width: 1080px;
+            --chat-desktop-gutter: 24rem;
         }
 
         .stApp {
@@ -516,7 +518,7 @@ def inject_styles() -> None:
             left: 0 !important;
             right: 0 !important;
             width: 100% !important;
-            padding: 0.9rem 1rem 1.25rem !important;
+            padding: 1rem 0 1.5rem !important;
             background: linear-gradient(
                 180deg,
                 rgba(247, 248, 251, 0) 0%,
@@ -535,9 +537,9 @@ def inject_styles() -> None:
         }
 
         [data-testid="stChatInput"] > div {
-            max-width: 960px;
+            max-width: var(--chat-max-width);
             margin: 0 auto;
-            width: min(960px, calc(100vw - 2.2rem));
+            width: min(var(--chat-max-width), calc(100vw - var(--chat-desktop-gutter)));
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
@@ -548,20 +550,20 @@ def inject_styles() -> None:
         [data-testid="stChatInput"] div[data-baseweb="textarea"],
         [data-testid="stChatInput"] div[data-baseweb="base-input"] {
             border: 1px solid #e3e8f1 !important;
-            border-radius: 18px !important;
+            border-radius: 20px !important;
             background: #ffffff !important;
-            box-shadow: 0 6px 20px rgba(23, 35, 79, 0.06) !important;
+            box-shadow: 0 10px 26px rgba(23, 35, 79, 0.08) !important;
         }
 
         [data-testid="stChatInput"] textarea {
-            min-height: 50px !important;
-            border-radius: 18px !important;
+            min-height: 54px !important;
+            border-radius: 20px !important;
             border: none !important;
             background: transparent !important;
             color: var(--text) !important;
             box-shadow: none !important;
-            padding-left: 1rem !important;
-            padding-right: 3.1rem !important;
+            padding: 0.9rem 3.3rem 0.9rem 1.1rem !important;
+            line-height: 1.5 !important;
         }
 
         [data-testid="stChatInput"] textarea:focus,
@@ -579,8 +581,8 @@ def inject_styles() -> None:
         }
 
         [data-testid="stChatInput"] button {
-            width: 34px !important;
-            height: 34px !important;
+            width: 36px !important;
+            height: 36px !important;
             border-radius: 999px !important;
             background: #eef2f8 !important;
             color: #7c8698 !important;
@@ -623,7 +625,19 @@ def inject_styles() -> None:
             }
 
             [data-testid="stChatInput"] > div {
-                width: calc(100vw - 1.2rem);
+                width: calc(100vw - 1.4rem);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            :root {
+                --chat-desktop-gutter: 20rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            :root {
+                --chat-desktop-gutter: 2rem;
             }
         }
         </style>
