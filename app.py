@@ -9,6 +9,11 @@ import streamlit as st
 from bootstrap_assets import ensure_runtime_assets
 
 
+st.set_page_config(
+    page_title="AI Analytics Assistant",
+    layout="wide",
+)
+
 ensure_runtime_assets()
 
 from rag.retriever_runtime import retrieve_reviews
@@ -23,12 +28,6 @@ from router.query_router_runtime import extract_subquery, route_query
 from sql.executor import execute_sql_with_error
 from sql.nl_to_sql import generate_sql
 from visualization.chart_generator import auto_chart
-
-
-st.set_page_config(
-    page_title="AI Analytics Assistant",
-    layout="wide",
-)
 
 
 PROMPT_CARDS = [
