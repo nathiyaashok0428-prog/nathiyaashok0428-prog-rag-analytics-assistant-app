@@ -528,7 +528,7 @@ def inject_styles() -> None:
 
         [data-testid="stBottomBlockContainer"],
         [data-testid="stBottomBlockContainer"] > div {
-            background: transparent !important;
+            background: #ffffff !important;
             border: none !important;
             box-shadow: none !important;
         }
@@ -556,7 +556,7 @@ def inject_styles() -> None:
             min-height: 54px !important;
             border-radius: 20px !important;
             border: none !important;
-            background: transparent !important;
+            background: rgba(14, 17, 23)  !important;
             color: var(--text) !important;
             box-shadow: none !important;
             padding: 0.9rem 3.3rem 0.9rem 1.1rem !important;
