@@ -539,7 +539,9 @@ ORDER BY order_count DESC, total_sales DESC
 LIMIT 10;
 """.strip()
 
-    if any(token in lowered for token in ["revenue by category", "category revenue"]):
+    mentions_revenue = any(token in lowered for token in ["revenue", "sales value", "gmv"])
+    mentions_category = any(token in lowered for token in ["category", "categories", "product category", "product categories"])
+    if any(token in lowered for token in ["revenue by category", "category revenue"]) or (mentions_revenue and mentions_category):
         return """
 SELECT
     products.product_category_name AS category,
