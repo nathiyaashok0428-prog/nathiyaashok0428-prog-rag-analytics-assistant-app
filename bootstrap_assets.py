@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sqlite3
 from pathlib import Path
 from typing import Dict, Tuple
 
@@ -11,6 +12,16 @@ ASSET_CONFIG: Dict[str, Tuple[Path, str]] = {
     "database": (Path("data/ecommerce.db"), "ECOMMERCE_DB_URL"),
     "faiss_index": (Path("rag/faiss_index.bin"), "FAISS_INDEX_URL"),
     "review_chunks": (Path("rag/review_chunks.pkl"), "REVIEW_CHUNKS_URL"),
+}
+
+REQUIRED_DB_TABLES = {
+    "orders",
+    "order_items",
+    "products",
+    "customers",
+    "payments",
+    "reviews",
+    "sellers",
 }
 
 
@@ -44,11 +55,33 @@ def _download_file(url: str, target_path: Path) -> None:
                 file_handle.write(chunk)
 
 
+def _is_valid_database(asset_path: Path) -> bool:
+    if not asset_path.exists() or asset_path.stat().st_size == 0:
+        return False
+
+    try:
+        conn = sqlite3.connect(asset_path)
+        try:
+            rows = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            ).fetchall()
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        return False
+
+    table_names = {row[0] for row in rows}
+    return REQUIRED_DB_TABLES.issubset(table_names)
+
+
 def ensure_runtime_assets() -> None:
     missing_secret_names = []
 
     for asset_name, (asset_path, secret_name) in ASSET_CONFIG.items():
-        if asset_path.exists():
+        if asset_name == "database":
+            if _is_valid_database(asset_path):
+                continue
+        elif asset_path.exists():
             continue
 
         asset_url = _get_asset_url(secret_name)
